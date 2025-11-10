@@ -1,0 +1,39 @@
+name: 290I-Assignment3
+description: |
+  Assignment 3 for course 290I. This repository contains an implementation of
+  Dijkstra's algorithm and supporting graph utilities, a simple server, and
+  helper modules used for testing and evaluation.
+repository: https://github.com/djudofia/290I-assignment3.git
+author: djudofia
+created: 2025-11-10
+license: MIT
+files:
+  - dijkstra.py: Implementation of Dijkstra's shortest-path algorithm.
+  - graph.py: Graph data structures and helpers.
+  - node.py: Node class used by the graph implementation.
+  - priority_queue.py: Min-priority queue used by Dijkstra.
+  - server.py: Simple HTTP server or CLI to run demos (see README.md).
+  - utils.py: Utility helpers.
+  - graph0.json: Example graph data used for testing.
+
+requirements:
+  - Python 3.10+ (recommended)
+  - See `requirements.txt` for pinned dependencies
+
+setup: |
+  # create a virtual environment and install requirements
+  python -m venv .venv
+  source .venv/bin/activate
+  pip install -r requirements.txt
+
+usage: |
+  # run the example server (if provided)
+  python server.py
+
+  # run dijkstra as a script or import the implementation
+  python dijkstra.py graph0.json
+
+notes: |
+  - This YAML is informational and intended for CI or automation that
+    consumes repository metadata. See the repository `README.md` for
+    human-readable instructions and examples.
