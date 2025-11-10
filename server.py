@@ -17,8 +17,17 @@ async def root():
 
 @app.post("/upload_graph_json/")
 async def create_upload_file(file: UploadFile):
-    #TODO: implement this function
-    raise NotImplementedError("/upload_graph_json not yet implemented.")
+    # Check if the file is a JSON file
+    if not file.filename.endswith(".json"):
+        return {"Upload Error": "Invalid file type"}
+    
+    try:
+        # Create graph from the JSON file
+        global active_graph
+        active_graph = create_graph_from_json(file)
+        return {"Upload Success": file.filename}
+    except Exception as e:
+        return {"Upload Error": str(e)}
 
 
 @app.get("/solve_shortest_path/start_node_id={start_node_id}&end_node_id={end_node_id}")
