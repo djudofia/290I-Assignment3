@@ -30,8 +30,8 @@ async def create_upload_file(file: UploadFile):
         return {"Upload Error": str(e)}
 
 
-@app.get("/solve_shortest_path/start_node_id={start_node_id}&end_node_id={end_node_id}")
-async def get_shortest_path(start_node_id: str, end_node_id: str):
+@app.get("/solve_shortest_path/starting_node_id={starting_node_id}&end_node_id={end_node_id}")
+async def get_shortest_path(starting_node_id: str, end_node_id: str):
     global active_graph
     
     # Check if a graph has been uploaded
@@ -39,13 +39,13 @@ async def get_shortest_path(start_node_id: str, end_node_id: str):
         return {"Error": "No graph uploaded. Please upload a graph first."}
     
     # Check if start and end nodes exist in the graph
-    if start_node_id not in active_graph.nodes:
-        return {"Error": f"Start node '{start_node_id}' not found in graph."}
+    if starting_node_id not in active_graph.nodes:
+        return {"Error": f"Start node '{starting_node_id}' not found in graph."}
     if end_node_id not in active_graph.nodes:
         return {"Error": f"End node '{end_node_id}' not found in graph."}
     
     # Get the start node
-    start_node = active_graph.nodes[start_node_id]
+    start_node = active_graph.nodes[starting_node_id]
     
     # Run Dijkstra's algorithm
     dijkstra(active_graph, start_node)
@@ -64,11 +64,11 @@ async def get_shortest_path(start_node_id: str, end_node_id: str):
     path.reverse()  # Reverse to get path from start to end
     
     # Check if a path exists
-    if len(path) == 0 or path[0] != start_node_id:
-        return {"Error": f"No path found from '{start_node_id}' to '{end_node_id}'."}
+    if len(path) == 0 or path[0] != starting_node_id:
+        return {"Error": f"No path found from '{starting_node_id}' to '{end_node_id}'."}
     
     return {
-        "start_node_id": start_node_id,
+        "starting_node_id": starting_node_id,
         "end_node_id": end_node_id,
         "shortest_path": path,
         "shortest_distance": float(shortest_distance)
