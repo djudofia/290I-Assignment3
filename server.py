@@ -16,6 +16,8 @@ async def root():
 
 
 @app.post("/upload_graph_json/")
+@app.post("/upload_graph_json")
+@app.post("/upload")
 async def create_upload_file(file: UploadFile):
     # Check if the file is a JSON file
     if not file.filename.endswith(".json"):
