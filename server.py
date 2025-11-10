@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, HTTPException
 from typing_extensions import Annotated
 import uvicorn
 from utils import *
@@ -18,18 +18,28 @@ async def root():
 @app.post("/upload_graph_json/")
 @app.post("/upload_graph_json")
 @app.post("/upload")
-async def create_upload_file(file: UploadFile):
-    # Check if the file is a JSON file
-    if not file.filename.endswith(".json"):
-        return {"Upload Error": "Invalid file type"}
-    
+async def create_upload_file(file: UploadFile = File(...)):
+    """Upload a JSON graph file and set it as the active graph.
+
+    Returns a JSON response with either Upload Success or Upload Error.
+    """
+    # basic filename validation
+    if not file.filename or not file.filename.lower().endswith(".json"):
+        raise HTTPException(status_code=400, detail={"Upload Error": "Invalid file type"})
+
+    # optional: check content type (some clients may omit correct header)
+    if file.content_type and "json" not in file.content_type:
+        # allow but warn — we'll still attempt to parse; respond with 400 if parsing fails
+        pass
+
     try:
-        # Create graph from the JSON file
         global active_graph
+        # delegate parsing to utils.create_graph_from_json which expects UploadFile
         active_graph = create_graph_from_json(file)
         return {"Upload Success": file.filename}
     except Exception as e:
-        return {"Upload Error": str(e)}
+        # return a 400 with error details
+        raise HTTPException(status_code=400, detail={"Upload Error": str(e)})
 
 
 @app.get("/solve_shortest_path/starting_node_id={starting_node_id}&end_node_id={end_node_id}")
